@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Samurai Fight</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <div class="stage">
+      <div class="hud">
+        <!-- player 1 health -->
+        <div class="health-bar health-bar--player">
+          <div class="health-bar__track"></div>
+          <div
+            id="playerHealth"
+            class="health-bar__fill health-bar__fill--player"
+          ></div>
+        </div>
+
+        <div id="timer" class="timer">60</div>
+
+        <!-- player 2 health -->
+        <div class="health-bar health-bar--enemy">
+          <div class="health-bar__track"></div>
+          <div
+            id="enemyHealth"
+            class="health-bar__fill health-bar__fill--enemy"
+          ></div>
+        </div>
+      </div>
+
+      <div id="displayText" class="result-text">Tie</div>
+
+      <canvas></canvas>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
