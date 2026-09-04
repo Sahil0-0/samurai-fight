@@ -210,14 +210,12 @@ function animate() {
     enemy.switchSprite('idle')
   }
 
-  // jumping
   if (enemy.velocity.y < 0) {
     enemy.switchSprite('jump')
   } else if (enemy.velocity.y > 0) {
     enemy.switchSprite('fall')
   }
 
-  // detect for collision & enemy gets hit
   if (
     rectangularCollision({
       rectangle1: player,
@@ -234,12 +232,10 @@ function animate() {
     })
   }
 
-  // if player misses
   if (player.isAttacking && player.framesCurrent === 4) {
     player.isAttacking = false
   }
 
-  // this is where our player gets hit
   if (
     rectangularCollision({
       rectangle1: enemy,
@@ -256,12 +252,10 @@ function animate() {
     })
   }
 
-  // if player misses
   if (enemy.isAttacking && enemy.framesCurrent === 2) {
     enemy.isAttacking = false
   }
 
-  // end game based on health
   if (enemy.health <= 0 || player.health <= 0) {
     determineWinner({ player, enemy, timerId })
   }
@@ -320,7 +314,6 @@ window.addEventListener('keyup', (event) => {
       break
   }
 
-  // enemy keys
   switch (event.key) {
     case 'ArrowRight':
       keys.ArrowRight.pressed = false

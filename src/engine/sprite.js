@@ -1,17 +1,14 @@
 import { c } from '../core/canvas.js'
 import { FRAMES_HOLD } from '../data/constants.js'
 
-/**
- * Draws a horizontal sprite sheet, one cell at a time. Every character sheet in
- * this project is an N x 200 strip of 200x200 cells.
- */
 export class Sprite {
   constructor({
     position,
     imageSrc,
     scale = 1,
     framesMax = 1,
-    offset = { x: 0, y: 0 }
+    offset = { x: 0, y: 0 },
+    framesHold = FRAMES_HOLD
   }) {
     this.position = position
     this.image = new Image()
@@ -20,22 +17,48 @@ export class Sprite {
     this.framesMax = framesMax
     this.framesCurrent = 0
     this.framesElapsed = 0
-    this.framesHold = FRAMES_HOLD
+    this.framesHold = framesHold
     this.offset = offset
+    this.facing = 1
+    this.nativeFacing = 1
   }
 
   draw() {
+    const cellWidth = this.image.width / this.framesMax
+    const drawWidth = cellWidth * this.scale
+    const drawHeight = this.image.height * this.scale
+    const dx = this.position.x - this.offset.x
+    const dy = this.position.y - this.offset.y
+
+    if (this.facing === this.nativeFacing) {
+      c.drawImage(
+        this.image,
+        this.framesCurrent * cellWidth,
+        0,
+        cellWidth,
+        this.image.height,
+        dx,
+        dy,
+        drawWidth,
+        drawHeight
+      )
+      return
+    }
+
+    c.save()
+    c.scale(-1, 1)
     c.drawImage(
       this.image,
-      this.framesCurrent * (this.image.width / this.framesMax),
+      this.framesCurrent * cellWidth,
       0,
-      this.image.width / this.framesMax,
+      cellWidth,
       this.image.height,
-      this.position.x - this.offset.x,
-      this.position.y - this.offset.y,
-      (this.image.width / this.framesMax) * this.scale,
-      this.image.height * this.scale
+      -dx - drawWidth,
+      dy,
+      drawWidth,
+      drawHeight
     )
+    c.restore()
   }
 
   animateFrames() {
@@ -50,8 +73,7 @@ export class Sprite {
     }
   }
 
-  update() {
-    this.draw()
+  tick() {
     this.animateFrames()
   }
 }

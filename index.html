@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Samurai Fight</title>
+    <link rel="icon" type="image/png" href="./img/favicon.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,30 +17,46 @@
   <body>
     <div class="stage">
       <div class="hud">
-        <!-- player 1 health -->
-        <div class="health-bar health-bar--player">
-          <div class="health-bar__track"></div>
-          <div
-            id="playerHealth"
-            class="health-bar__fill health-bar__fill--player"
-          ></div>
+        <div class="health-bar-group">
+          <div class="health-bar health-bar--player">
+            <div class="health-bar__track"></div>
+            <div id="playerHealth" class="health-bar__fill"></div>
+          </div>
+          <div id="playerName" class="fighter-name"></div>
         </div>
 
-        <div id="timer" class="timer">60</div>
+        <div id="timer" class="timer"></div>
 
-        <!-- player 2 health -->
-        <div class="health-bar health-bar--enemy">
-          <div class="health-bar__track"></div>
-          <div
-            id="enemyHealth"
-            class="health-bar__fill health-bar__fill--enemy"
-          ></div>
+        <div class="health-bar-group">
+          <div class="health-bar health-bar--enemy">
+            <div class="health-bar__track"></div>
+            <div id="enemyHealth" class="health-bar__fill"></div>
+          </div>
+          <div id="enemyName" class="fighter-name fighter-name--enemy"></div>
         </div>
       </div>
 
-      <div id="displayText" class="result-text">Tie</div>
+      <div id="displayText" class="result-text"></div>
 
       <canvas></canvas>
+
+      <div class="controls">
+        <span>A Move Left</span>
+        <span>Q Dash Left</span>
+        <span>D Move Right</span>
+        <span>E Dash Right</span>
+        <span>W Jump</span>
+        <span>Space to Attack</span>
+        <span>Enter Start</span>
+        <span>R Replay</span>
+      </div>
+
+      <p class="hint">
+        <span class="hint-enter">Press F for fullscreen</span>
+        <span class="hint-exit">Press F to exit fullscreen</span>
+      </p>
+
+      <div id="debug" class="debug" hidden></div>
     </div>
 
     <script type="module" src="./src/main.js"></script>

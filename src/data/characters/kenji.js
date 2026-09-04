@@ -1,25 +1,18 @@
-/**
- * Player 2. Every sheet is an N x 200 strip of 200x200 cells.
- *
- * Attack2.png (4 cells) exists on disk but is not wired up yet.
- *
- * NOTE: Kenji's attack1 sheet has 4 cells to Mack's 6. Because hit detection is
- * currently keyed to a sprite cell index, that makes his attack land roughly
- * 167ms sooner than Mack's - an unintended balance advantage that the
- * frame-data phase is meant to remove.
- */
+import { ENEMY_SPAWN_X, FRAMES_HOLD } from '../constants.js'
+
 export const kenji = {
   id: 'kenji',
-  spawn: { x: 400, y: 100 },
+  spawn: { x: ENEMY_SPAWN_X, y: 100 },
+  facing: -1,
   scale: 2.5,
-  // Nudges the drawn sprite so the 200x200 art lines up with the 50x150 body.
   offset: { x: 215, y: 167 },
   imageSrc: './img/kenji/Idle.png',
   framesMax: 4,
   sprites: {
     idle: {
       imageSrc: './img/kenji/Idle.png',
-      framesMax: 4
+      framesMax: 4,
+      framesHold: FRAMES_HOLD * 1.1
     },
     run: {
       imageSrc: './img/kenji/Run.png',
@@ -35,11 +28,13 @@ export const kenji = {
     },
     attack1: {
       imageSrc: './img/kenji/Attack1.png',
-      framesMax: 4
+      framesMax: 4,
+      cellsByPhase: { startup: [0], active: [1], recovery: [2, 3] }
     },
     takeHit: {
       imageSrc: './img/kenji/Take hit.png',
-      framesMax: 3
+      framesMax: 3,
+      framesHold: FRAMES_HOLD * 1.4
     },
     death: {
       imageSrc: './img/kenji/Death.png',
@@ -47,10 +42,7 @@ export const kenji = {
     }
   },
   attackBox: {
-    offset: {
-      x: -170,
-      y: 50
-    },
+    offset: { x: -170, y: 50 },
     width: 170,
     height: 50
   }

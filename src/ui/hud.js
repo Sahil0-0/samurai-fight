@@ -1,55 +1,92 @@
-import gsap from 'gsap'
-import { ROUND_TIME } from '../data/constants.js'
+import { ROUND_TIME, TICK_RATE } from '../data/constants.js'
+
+const PLAYER_NAME = 'Kenji'
+const ENEMY_NAME = 'Azuki'
+
+const HEALTH_BAR_EMPTY_IMAGE = "url('./img/health-bar-empty.png')"
+const HEALTH_BAR_FULL_IMAGE = "url('./img/health-bar-full.png')"
 
 const timerEl = document.querySelector('#timer')
 const displayTextEl = document.querySelector('#displayText')
 const playerHealthEl = document.querySelector('#playerHealth')
 const enemyHealthEl = document.querySelector('#enemyHealth')
+const trackEls = document.querySelectorAll('.health-bar__track')
+const playerNameEl = document.querySelector('#playerName')
+const enemyNameEl = document.querySelector('#enemyName')
 
-let timer = ROUND_TIME
-let timerId
+playerNameEl.textContent = PLAYER_NAME
+enemyNameEl.textContent = ENEMY_NAME
 
-/**
- * Starts the round clock. Ticks once immediately, matching the original
- * behaviour where the displayed time drops by one as soon as the game loads.
- */
-export function startTimer(onTimeout) {
-  function decreaseTimer() {
-    if (timer > 0) {
-      timerId = setTimeout(decreaseTimer, 1000)
-      timer--
-      timerEl.innerHTML = timer
-    }
+for (const trackEl of trackEls) {
+  trackEl.style.backgroundImage = HEALTH_BAR_EMPTY_IMAGE
+}
+playerHealthEl.style.backgroundImage = HEALTH_BAR_FULL_IMAGE
+enemyHealthEl.style.backgroundImage = HEALTH_BAR_FULL_IMAGE
 
-    if (timer === 0) {
-      onTimeout()
-    }
-  }
+let secondsLeft = ROUND_TIME
+let ticksUntilNextSecond = TICK_RATE
+let running = false
+let onTimeout = () => {}
 
-  decreaseTimer()
+function formatTime(seconds) {
+  const minutes = Math.floor(seconds / 60)
+  const remainder = String(seconds % 60).padStart(2, '0')
+  return `${minutes}:${remainder}`
+}
+
+export function startTimer(onRoundTimeout) {
+  resetTimerDisplay()
+  onTimeout = onRoundTimeout
+  running = true
+}
+
+export function resetTimerDisplay() {
+  secondsLeft = ROUND_TIME
+  ticksUntilNextSecond = TICK_RATE
+  timerEl.textContent = formatTime(secondsLeft)
 }
 
 export function stopTimer() {
-  clearTimeout(timerId)
+  running = false
+}
+
+export function tickTimer() {
+  if (!running) return
+
+  ticksUntilNextSecond--
+  if (ticksUntilNextSecond > 0) return
+
+  ticksUntilNextSecond = TICK_RATE
+  secondsLeft--
+  timerEl.textContent = formatTime(secondsLeft)
+
+  if (secondsLeft <= 0) {
+    running = false
+    onTimeout()
+  }
 }
 
 export function setPlayerHealth(health) {
-  gsap.to(playerHealthEl, { width: health + '%' })
+  playerHealthEl.style.width = `${health}%`
 }
 
 export function setEnemyHealth(health) {
-  gsap.to(enemyHealthEl, { width: health + '%' })
+  enemyHealthEl.style.width = `${health}%`
 }
 
 export function determineWinner({ player, enemy }) {
   stopTimer()
-  displayTextEl.style.display = 'flex'
+  if (player.health === enemy.health) return 'Tie'
+  return player.health > enemy.health ? PLAYER_NAME : ENEMY_NAME
+}
 
-  if (player.health === enemy.health) {
-    displayTextEl.innerHTML = 'Tie'
-  } else if (player.health > enemy.health) {
-    displayTextEl.innerHTML = 'Player 1 Wins'
-  } else if (player.health < enemy.health) {
-    displayTextEl.innerHTML = 'Player 2 Wins'
-  }
+export function showCenterText(main, sub = '') {
+  displayTextEl.style.display = 'flex'
+  displayTextEl.innerHTML = sub
+    ? `<div class="result-text__main">${main}</div><div class="result-text__sub">${sub}</div>`
+    : main
+}
+
+export function hideCenterText() {
+  displayTextEl.style.display = 'none'
 }
